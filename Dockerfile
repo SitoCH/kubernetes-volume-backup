@@ -1,4 +1,4 @@
-FROM gradle:3.5-jdk-alpine
+FROM gradle:5.3-jdk-alpine
 ENV RCLONE_VERSION v1.36
 
 # The gradle image runs under the user "gradle", but when you run as gradle, the gradle cache directory is inside a
