@@ -21,12 +21,14 @@ fun performCommand(command: List<String>) {
     println("STDERR From rclone:\n$stderr")
 }
 
-fun setRcloneConfig(region: String) {
+fun setRcloneConfig(region: String, endpoint: String?) {
+    val endpointConfig = if(endpoint != null)  "endpoint = $endpoint" else ""
     val rcloneConfig = """
                        [s3]
                        type = s3
                        env_auth = true
                        region = $region
+                       $endpointConfig
                        """.trimIndent()
 
     File("/root/.config/rclone").mkdirs()

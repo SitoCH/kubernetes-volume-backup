@@ -35,10 +35,9 @@ class MainSpec : Spek({
             FuelManager.instance.client = object : Client {
                 override fun executeRequest(request: Request): Response {
                     sentRequest = request
-                    return Response().apply {
-                        httpStatusCode = 404
-                        httpResponseMessage = "Not Found"
-                    }
+                    return Response( url = request.url,
+                        statusCode = 404,
+                        responseMessage = "Not Found")
                 }
             }
         }
@@ -69,7 +68,8 @@ class MainSpec : Spek({
             assertEquals(Config(
                     "key id",
                     "secret key",
-                    "region",
+                "region",
+                "endpoint",
                     "bucket name",
                     "pod name",
                     "namespace",
@@ -110,6 +110,7 @@ class MainSpec : Spek({
                     null,
                     null,
                     "eu-west-1",
+                    "endpoint",
                     "bucket name",
                     InetAddress.getLocalHost().hostName,
                     "default",

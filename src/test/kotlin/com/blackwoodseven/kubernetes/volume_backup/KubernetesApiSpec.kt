@@ -363,11 +363,9 @@ class KubernetesApiSpec : Spek({
             FuelManager.instance.client = object : Client {
                 override fun executeRequest(request: Request): Response {
                     sentRequest = request
-                    return Response().apply {
-                        data = podJson.toByteArray()
-                        httpStatusCode = 200
-                        httpResponseMessage = "OK"
-                    }
+                    return Response( url = request.url,
+                        statusCode = 200,
+                        responseMessage = "OK")
                 }
             }
         }

@@ -15,6 +15,7 @@ data class Config(
         val awsAccessKeyId: String?,
         val awsSecretAccessKey: String?,
         val awsDefaultRegion: String,
+        val awsS3Endpoint: String?,
         val awsS3BucketName: String,
         val podName: String,
         val namespace: String,
@@ -45,6 +46,7 @@ fun parseConfig(): Config {
     val rawAwsAccessKeyId = System.getenv("AWS_ACCESS_KEY_ID")
     val rawAwsSecretAccessKey = System.getenv("AWS_SECRET_ACCESS_KEY")
     val rawAwsDefaultRegion = System.getenv("AWS_DEFAULT_REGION")
+    val rawAwsS3Endpoint = System.getenv("AWS_S3_ENDPOINT")
     val rawAwsS3BucketName = System.getenv("AWS_S3_BUCKET_NAME")
     val rawK8sPodName = System.getenv("K8S_POD_NAME")
     val rawK8sNamespace = System.getenv("K8S_NAMESPACE")
@@ -135,6 +137,7 @@ fun parseConfig(): Config {
             rawAwsAccessKeyId,
             rawAwsSecretAccessKey,
             awsDefaultRegion,
+            rawAwsS3Endpoint,
             rawAwsS3BucketName,
             k8sPodName,
             k8sNamespace,
@@ -167,6 +170,7 @@ fun logConfig(config: Config) {
             awsAccessKeyId: ${config.awsAccessKeyId}
             awsSecretAccessKey: [hidden]
             awsDefaultRegion: ${config.awsDefaultRegion}
+            awsS3Endpoint: ${config.awsS3Endpoint}
             awsS3BucketName: ${config.awsS3BucketName}
             podName: ${config.podName}
             namespace: ${config.namespace}
@@ -194,7 +198,7 @@ fun main(args : Array<String>) {
     logConfig(config)
 
     logger.info { "Initializing..." }
-    setRcloneConfig(config.awsDefaultRegion)
+    setRcloneConfig(config.awsDefaultRegion, config.awsS3Endpoint)
     val token = getKubernetesToken()
     val podDescription = fetchPodDescription(config.podName, config.namespace, config.kubernetesHostname, token) ?:
             throw RuntimeException("Could not fetch pod description.")
